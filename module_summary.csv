@@ -1,0 +1,17 @@
+﻿module,display_name,profile,area_um2,simulation_tick_ns,native_clock_period_ns,latency_description,latency_or_scheduling_ticks,dynamic_mw,energy_dynamic_pj_per_op,estimated_dynamic_energy_pj_per_op,energy_incremental_vs_idle_pj_per_op,operation_unit,evidence_and_scope,write_dynamic_energy_pj_per_op,implementation
+PE_ALL,MXFP4_CIM_NEW / PE_ALL,legacy_random_TAG,2056.137999,1,,组合约0.87 ns；arrival 0.97 ns含0.10 ns输入延迟；调度取整,1,10.518,10.518,,,32 lane TAG点积,旧电路SAIF；数值审计失败；临时时序约束slack -0.27 ns,,
+bf16_align_add32,32路 BF16→FP32 移位加法器树,legacy_vectorless_estimate,3124.435956,1,,组合2.00 ns（报告精度）；调度取整,2,1.6631,,3.3262,,32 lane归约,DC默认活动率估算；无负载标注能量；数值审计失败,,
+rfp4_to_tagfp4_32,rfp4_to_tagfp4_32,dense,185.023999,1,,组合TT 0.107632 ns / SS 0.179868 ns；调度取整,1,0.1724128,0.3448256,,,32 lane格式转换,门级SAIF；2 ns输入间隔保持不变,,
+mxfp4_to_tagfp4_32,mxfp4_to_tagfp4_32,dense,43.904,1,,组合TT 0.100615 ns / SS 0.162676 ns；调度取整,1,0.0550038,0.1100076,,,32 lane格式转换,门级SAIF；2 ns输入间隔保持不变,,
+mx_scale32,mx_scale32,high_duty_random_scales,3220.67203,1,2.0,输入握手到下游接受；II=2拍,2,3.3025,7.043384955752213,,,32对scale,沿用v0.1门级SAIF；只含scale算术,,
+phy,phy,continuous_valid_random,533.708023,1,2.0,输入握手到下游采样；II=2拍,4,0.7799925,1.56518495,,,128-bit数据,同一时钟数字流水；无模拟PHY/互连能量,,
+mc,mc,read_only,882.588024,1,2,读响应24拍；请求II=26拍,24,0.6411592,16.75286941935484,,1.666554096774192,128-bit读请求,控制器SAIF；不含存储/PHY/DMA；LAT仍为12个原周期,,
+mc,mc,write_only,882.588024,1,2,请求间隔26拍；无独立写响应包,,0.6182356,16.153897935483872,,1.067582612903223,128-bit写请求,控制器SAIF；含窗口背景,,
+dma128,dma128,host_to_sram,1462.258034,1,2,每beat间隔6拍；N beat到done_valid为6N拍,6,0.8983433000000001,6.524809231578948,,0.7015353473684219,128-bit beat,SAIF；外部读响应2拍；端点存储与Host适配器另计,,
+tile_nonpe,tile_nonpe,dense,33427.996819,1,2,命令到out_valid；外部PE模型响应2拍；命令II=8拍,4,21.099,337.584,,27.49279999999999,32 PE的Tile step,SAIF；16拍/次测量窗口；不含PE/译码/SRAM/DMA；数值契约有条件,,
+llm_nonmac_fp32,llm_nonmac_fp32 流水候选,softmax,16520.448083,1,2.0,Softmax 1024元素到out_valid；其他22模式另表,53272.0,4.3776,233229.7728,,,1024元素向量,已验证提速；动态能量增加；与原版二选一；外部SRAM能量另计,,validated_pipeline_v0.3
+SRAM_1024X128_LL,SRAM_1024X128_LL,TT read/write,30406.5845,1,2,CLK→Q=0.488532 ns；wrapper访问槽2拍,2,,9.477161776772247,,,128-bit整字,SRAM编译器Liberty访问能量；不含wrapper/输入驱动/泄漏,13.124451215686273,
+SRAM_1024X8_LL,SRAM_1024X8_LL,TT read/write,3665.3173,1,2,CLK→Q=0.331313 ns；wrapper访问槽2拍,2,,1.6621774457013574,,,8-bit整字,SRAM编译器Liberty访问能量；不含wrapper/输入驱动/泄漏,1.802029290346908,
+sram_bank136,sram_bank136,,34164.70737,1,2,配对读响应2拍；访问II=2拍,2,,11.139339222473605,,,136-bit联合读,两宏面积含本地wrapper；能量仅为两宏之和，wrapper另加,,
+global_sram_32banks,global_sram_32banks,,1093270.63584,1,,32 bank并行读；访问II=2拍,2,,356.4588551191554,,,4352-bit并行读,面积为32份bank；能量仅宏；全局布线/仲裁另计；勿重复累加bank与宏行,,
+llm_nonmac_fp32_baseline,llm_nonmac_fp32 原版（备选）,softmax,13312.319981,1,10,Softmax 1024元素到out_valid；其他22模式另表,194620,0.396366,77152.6419,,,1024元素向量,原10 ns硬件周期；报告1 ns/拍；与流水版二选一计费，面积不能相加,,baseline_v0.2
